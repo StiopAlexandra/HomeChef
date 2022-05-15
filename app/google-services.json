@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "616161764594",
+    "firebase_url": "https://home-chef-10-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "home-chef-10",
+    "storage_bucket": "home-chef-10.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:616161764594:android:021c246c27badf2e3ddc6b",
+        "android_client_info": {
+          "package_name": "com.example.homechef"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "616161764594-o3ch84q02jtkq0euu1vcbuhpblgootlv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwQ4TBMp2nl40-UOyXNH9qfNh82BMwvY4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "616161764594-o3ch84q02jtkq0euu1vcbuhpblgootlv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
