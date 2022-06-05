@@ -1,102 +1,71 @@
 package com.example.homechef;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.MenuItem;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity{
 
-    private TextView register;
-    private EditText editTextEmail, editTextPassword;
-    private Button login;
-
-    private FirebaseAuth fAuth;
-    private ProgressBar progressBar;
+    private FirebaseAuth mAuth;
+    BottomNavigationView bottomNavigationView;
+    HomeFragment homeFragment = new HomeFragment();
+    ShoppingListFragment shoppingListFragment = new ShoppingListFragment();
+    FavoritesFragment favoritesFragment = new FavoritesFragment();
+    SettingsFragment settingsFragment = new SettingsFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        register = (TextView) findViewById(R.id.register);
-        register.setOnClickListener(this);
+        mAuth = FirebaseAuth.getInstance();
 
-        login = (Button) findViewById(R.id.login);
-        login.setOnClickListener(this);
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
 
-        editTextEmail = (EditText) findViewById(R.id.email);
-        editTextPassword = (EditText) findViewById(R.id.password);
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-        fAuth = FirebaseAuth.getInstance();
-    }
-
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.register:
-                startActivity(new Intent(this,RegisterUser.class));
-                break;
-            case R.id.login:
-                userLogin();
-                break;
-        }
-    }
-
-    private void userLogin() {
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
-
-        if(email.isEmpty()){
-            editTextEmail.setError("Email is required!");
-            editTextEmail.requestFocus();
-            return;
-        }
-
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            editTextEmail.setError("Please provide valid email!");
-            editTextEmail.requestFocus();
-            return;
-        }
-
-        if(password.isEmpty()){
-            editTextPassword.setError("Password is required!");
-            editTextPassword.requestFocus();
-            return;
-        }
-
-        if(password.length() < 6){
-            editTextPassword.setError("Min password length should be 6 characters!");
-            editTextPassword.requestFocus();
-            return;
-        }
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
-                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
+            public boolean onNavigationItemSelected(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.home:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
+                        return true;
+                    case R.id.shoppingList:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, shoppingListFragment).commit();
+                        return true;
+                    case R.id.favorites:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, favoritesFragment).commit();
+                        return true;
+                    case R.id.settings:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, settingsFragment).commit();
+                        return true;
                 }
-                else {
-                    Toast.makeText(MainActivity.this, "Failed to login! please check your credentials!", Toast.LENGTH_LONG).show();
-                }
+                return false;
             }
         });
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) {
+            sendToLogin();
+        }
+    }
+
+    private void sendToLogin() {
+        Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
+        finish(); // The user can't come back to this page
+    }
+
 }

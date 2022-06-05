@@ -19,7 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class RegisterUser extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView banner, registerUser;
     private EditText editTextFullName, editTextEmail, editTextPassword;
@@ -30,7 +30,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_user);
+        setContentView(R.layout.activity_register);
 
         fAuth = FirebaseAuth.getInstance();
 
@@ -51,7 +51,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.banner:
-                startActivity(new Intent(this, MainActivity.class));
+                startActivity(new Intent(this, LoginActivity.class));
                 break;
             case R.id.registerUser:
                 registerUser();
@@ -108,20 +108,23 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if(task.isSuccessful()){
-                                        Toast.makeText(RegisterUser.this, "User has been register successfully!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(RegisterActivity.this, "User has been register successfully!", Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
 
-                                        //redirect to login layout
+                                        Intent mainIntent= new Intent(RegisterActivity.this, MainActivity.class);
+                                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(mainIntent);
+                                        finish();
                                     }
                                     else {
-                                        Toast.makeText(RegisterUser.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
                                     }
                                 }
                             });
                         }
                         else {
-                            Toast.makeText(RegisterUser.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }
