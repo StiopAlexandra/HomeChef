@@ -15,8 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,17 +85,18 @@ public class HomeFragment extends Fragment {
         });
 
         searchView.clearFocus();
+        ImageView clearButton = searchView.findViewById(androidx.appcompat.R.id.search_close_btn);
+        clearButton.setOnClickListener(v -> {
+            searchView.setQuery("", false);
+            recyclerView.setVisibility(View.GONE);
+            getRandomRecipes(0, 0);
+        });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 progressBar.setVisibility(View.VISIBLE);
                 recyclerView.setVisibility(View.GONE);
-                if(query.isEmpty()){
-                    getRandomRecipes(0, 0);
-                }
-                else {
-                    searchRecipe(query);
-                }
+                searchRecipe(query);
                 return true;
             }
 

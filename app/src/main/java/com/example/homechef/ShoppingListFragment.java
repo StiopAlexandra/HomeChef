@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -82,8 +81,6 @@ public class ShoppingListFragment extends Fragment {
                     myrv.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
                 } else {
-                    for(int j=0;j<lstShop.size();j++)
-                        Log.i("lstShop", lstShop.get(j).toString());
                     LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
                     ParentAdapterShoppingList myAdapter = new ParentAdapterShoppingList(lstShop);
                     myrv.setAdapter(myAdapter);

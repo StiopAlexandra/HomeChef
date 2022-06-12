@@ -87,7 +87,6 @@ public class RecipeActivity extends AppCompatActivity {
         mRefFav.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i("mRefFav", String.valueOf(dataSnapshot));
                 if (dataSnapshot.getValue() != null) {
                     favButton.setImageResource(R.drawable.ic_baseline_favorite_border_red_24);
                     favorite = true;
@@ -103,7 +102,6 @@ public class RecipeActivity extends AppCompatActivity {
         mRefShop.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i("mRefShop", String.valueOf(dataSnapshot));
                 if (dataSnapshot.getValue() != null) {
                     shopButton.setImageResource(R.drawable.ic_baseline_playlist_add_check_red_24);
                     shop = true;
@@ -204,7 +202,6 @@ public class RecipeActivity extends AppCompatActivity {
                                 jsonObject1 = instructionsArr.getJSONObject(i);
                                 instructions.add(jsonObject1.optString("display_text"));
                             }
-                            Log.i("instructions", String.valueOf(instructions));
                             RecyclerViewAdapterRow adapter1 = new RecyclerViewAdapterRow(getApplicationContext(), instructions);
                             instructions_rv.setAdapter(adapter1);
                             JSONArray ingredientsArr;
@@ -221,7 +218,6 @@ public class RecipeActivity extends AppCompatActivity {
                                     ingredients.add(jsonObject3.optString("raw_text"));
                                 }
                             }
-                            Log.i("ingredients", String.valueOf(ingredients));
                             RecyclerViewAdapterRow adapter2 = new RecyclerViewAdapterRow(getApplicationContext(), ingredients);
                             ingredients_rv.setAdapter(adapter2);
                             progressBar.setVisibility(View.GONE);
