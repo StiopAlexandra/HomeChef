@@ -38,7 +38,7 @@ public class RecyclerViewAdapterRow extends RecyclerView.Adapter<RecyclerViewAda
         return mData.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView myTextView;
 
         public ViewHolder(View itemView) {

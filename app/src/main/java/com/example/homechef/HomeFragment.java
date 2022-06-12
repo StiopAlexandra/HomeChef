@@ -48,7 +48,7 @@ public class HomeFragment extends Fragment {
     private SearchView searchView;
     private NestedScrollView nestedSV;
     public static int TIMEOUT_MS = 10000;
-    int page, limit;
+    int nr, limit;
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +61,8 @@ public class HomeFragment extends Fragment {
 
         final View RootView = inflater.inflate(R.layout.fragment_home, container, false);
         recipes = new ArrayList<>();
-        page = 0;
-        limit = 0;
+        nr = 0;
+        limit = 21;
         progressBar = RootView.findViewById(R.id.progressBar3);
         emptyView = RootView.findViewById(R.id.empty_view);
         nestedSV = RootView.findViewById(R.id.idNestedSV);
@@ -70,15 +70,15 @@ public class HomeFragment extends Fragment {
         recyclerView = RootView.findViewById(R.id.recyclerview);
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
-        getRandomRecipes(page,limit);
+        getRandomRecipes(nr, limit);
 
         nestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    page++;
-                    if(searchView.getQuery().toString().isEmpty()){
-                        getRandomRecipes(page, limit);
+                    nr = nr + 20;
+                    if (searchView.getQuery().toString().isEmpty()) {
+                        getRandomRecipes(nr, limit);
                     }
                 }
             }
@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
         clearButton.setOnClickListener(v -> {
             searchView.setQuery("", false);
             recyclerView.setVisibility(View.GONE);
-            getRandomRecipes(0, 0);
+            getRandomRecipes(0, 21);
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -109,14 +109,14 @@ public class HomeFragment extends Fragment {
         return RootView;
     }
 
-    private void getRandomRecipes(int page, int limit) {
+    private void getRandomRecipes(int nr, int limit) {
         progressBar.setVisibility(View.VISIBLE);
-        if (page > limit) {
+        if (nr > limit) {
             Toast.makeText(getActivity(), "That's all the data..", Toast.LENGTH_LONG).show();
             progressBar.setVisibility(View.GONE);
             return;
         }
-        String URL = "https://tasty.p.rapidapi.com/recipes/list?from="+page+"&size=20";
+        String URL = "https://tasty.p.rapidapi.com/recipes/list?from=" + nr + "&size=20";
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -131,8 +131,7 @@ public class HomeFragment extends Fragment {
                             for (int i = 0; i < arr.length(); i++) {
                                 JSONObject jsonObject = arr.getJSONObject(i);
                                 JSONObject total_time_tier = new JSONObject();
-                                if(jsonObject.has("total_time_tier") && !jsonObject.isNull("total_time_tier"))
-                                {
+                                if (jsonObject.has("total_time_tier") && !jsonObject.isNull("total_time_tier")) {
                                     total_time_tier = jsonObject.optJSONObject("total_time_tier");
                                 }
                                 recipes.add(new Recipe(jsonObject.optString("id"), jsonObject.optString("name"), jsonObject.optString("thumbnail_url"), jsonObject.optString("yields"), total_time_tier.optString("display_tier")));
@@ -178,7 +177,7 @@ public class HomeFragment extends Fragment {
 
     private void searchRecipe(String search) {
         searchRecipe = new ArrayList<Recipe>();
-        String URL="https://tasty.p.rapidapi.com/recipes/list?from=1&size=20&q=" + search;
+        String URL = "https://tasty.p.rapidapi.com/recipes/list?from=1&size=20&q=" + search;
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET,
@@ -192,21 +191,19 @@ public class HomeFragment extends Fragment {
                             for (int i = 0; i < arr.length(); i++) {
                                 JSONObject jsonObject = arr.getJSONObject(i);
                                 String time = new String("");
-                                if(jsonObject.has("total_time_tier") && !jsonObject.isNull("total_time_tier"))
-                                {
+                                if (jsonObject.has("total_time_tier") && !jsonObject.isNull("total_time_tier")) {
                                     JSONObject total_time_tier = jsonObject.getJSONObject("total_time_tier");
                                     time = total_time_tier.optString("display_tier");
                                 }
                                 searchRecipe.add(new Recipe(jsonObject.optString("id"), jsonObject.optString("name"), jsonObject.optString("thumbnail_url"), jsonObject.optString("yields"), time));
                             }
                             progressBar.setVisibility(View.GONE);
-                            if(searchRecipe.isEmpty()){
+                            if (searchRecipe.isEmpty()) {
                                 recyclerView.setAlpha(0);
                                 progressBar.setVisibility(View.GONE);
                                 emptyView.setVisibility(View.VISIBLE);
                                 recyclerView.setVisibility(View.GONE);
-                            }
-                            else{
+                            } else {
                                 emptyView.setVisibility(View.GONE);
                                 progressBar.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
@@ -225,11 +222,12 @@ public class HomeFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         Log.i("error", error.toString());
                         progressBar.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.GONE);;
+                        recyclerView.setVisibility(View.GONE);
+                        ;
                         emptyView.setVisibility(View.VISIBLE);
                     }
                 }
-        ){
+        ) {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {

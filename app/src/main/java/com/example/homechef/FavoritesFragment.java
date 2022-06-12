@@ -45,7 +45,7 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View RootView = inflater.inflate(R.layout.fragment_favorites, container, false);
         progressBar = RootView.findViewById(R.id.progressBar5);
-        emptyView= RootView.findViewById(R.id.empty_view_favorites);
+        emptyView = RootView.findViewById(R.id.empty_view_favorites);
         getFavorites(RootView);
         return RootView;
     }
@@ -68,11 +68,10 @@ public class FavoritesFragment extends Fragment {
                 }
                 progressBar.setVisibility(View.GONE);
                 myrv = rootView.findViewById(R.id.recyclerview_favorites);
-                if(lstFavorites.isEmpty()){
+                if (lstFavorites.isEmpty()) {
                     myrv.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     myrv.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                     RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(getContext(), lstFavorites);
                     myrv.setAdapter(myAdapter);

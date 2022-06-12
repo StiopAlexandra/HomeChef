@@ -14,7 +14,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private SharedPreferences sharedPreferences = null;
@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPreferences =getPreferences(Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean("night_mode",true)){
+        sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("night_mode", true)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
 
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity{
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.home:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container, homeFragment).commit();
                         return true;

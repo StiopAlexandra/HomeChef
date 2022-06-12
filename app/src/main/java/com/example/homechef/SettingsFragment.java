@@ -46,29 +46,29 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View RootView = inflater.inflate(R.layout.fragment_settings, container, false);
-        email_edit= RootView.findViewById(R.id.edit2);
-        fullName_edit= RootView.findViewById(R.id.edit1);
-        switchTheme= RootView.findViewById(R.id.switchTheme);
+        email_edit = RootView.findViewById(R.id.edit2);
+        fullName_edit = RootView.findViewById(R.id.edit1);
+        switchTheme = RootView.findViewById(R.id.switchTheme);
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-        if (sharedPreferences.getBoolean("night_mode",true)){
+        if (sharedPreferences.getBoolean("night_mode", true)) {
             switchTheme.setChecked(true);
         }
 
         switchTheme.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     switchTheme.setChecked(true);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("night_mode",true);
+                    editor.putBoolean("night_mode", true);
                     editor.commit();
 
-                }else {
+                } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                     switchTheme.setChecked(false);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("night_mode",false);
+                    editor.putBoolean("night_mode", false);
                     editor.commit();
                 }
                 Intent main = new Intent(getActivity(), MainActivity.class);
@@ -119,19 +119,19 @@ public class SettingsFragment extends Fragment {
         String email = email_edit.getText().toString().trim();
         String fullName = fullName_edit.getText().toString().trim();
 
-        if(email.isEmpty()){
+        if (email.isEmpty()) {
             email_edit.setText(currentUser.getEmail());
             email_edit.clearFocus();
             email = currentUser.getEmail();
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             email_edit.setError("Please provide valid email!");
             email_edit.requestFocus();
             return;
         }
 
-        if(fullName.isEmpty()){
+        if (fullName.isEmpty()) {
             fullName_edit.setText(currentUser.getFullName());
             fullName_edit.clearFocus();
             fullName = currentUser.getFullName();

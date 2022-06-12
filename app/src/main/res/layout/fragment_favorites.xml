@@ -9,23 +9,23 @@
 
     <Toolbar
         android:id="@+id/toolbar"
-        android:background="@drawable/bottom_border"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_border">
 
-            <TextView
-                android:id="@+id/banner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="cursive"
-                android:text="Favorite Recipes"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_gravity="center"
-                android:textAlignment="center"
-                android:textColor="@color/color_500"
-                android:textSize="40sp"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/banner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:fontFamily="cursive"
+            android:text="Favorite Recipes"
+            android:textAlignment="center"
+            android:textColor="@color/color_500"
+            android:textSize="40sp"
+            android:textStyle="bold" />
     </Toolbar>
 
     <androidx.core.widget.NestedScrollView
@@ -43,9 +43,9 @@
                 android:id="@+id/recyclerview_favorites"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_gravity="center_horizontal"
                 android:nestedScrollingEnabled="false"
                 android:scrollbars="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -57,8 +57,8 @@
                 android:id="@+id/empty_view_favorites"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:layout_marginTop="10dp"
+                android:gravity="center"
                 android:text="Don't have favorite recipes..."
                 android:visibility="gone" />
 

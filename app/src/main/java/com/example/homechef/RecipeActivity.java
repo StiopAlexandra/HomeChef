@@ -135,6 +135,7 @@ public class RecipeActivity extends AppCompatActivity {
                             }
                         }
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                     }
@@ -163,6 +164,7 @@ public class RecipeActivity extends AppCompatActivity {
                             }
                         }
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
                     }

@@ -64,31 +64,31 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-        if(fullName.isEmpty()){
+        if (fullName.isEmpty()) {
             editTextFullName.setError("Full name is required!");
             editTextFullName.requestFocus();
             return;
         }
 
-        if(email.isEmpty()){
+        if (email.isEmpty()) {
             editTextEmail.setError("Email is required!");
             editTextEmail.requestFocus();
             return;
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Please provide valid email!");
             editTextEmail.requestFocus();
             return;
         }
 
-        if(password.isEmpty()){
+        if (password.isEmpty()) {
             editTextPassword.setError("Password is required!");
             editTextPassword.requestFocus();
             return;
         }
 
-        if(password.length() < 6){
+        if (password.length() < 6) {
             editTextPassword.setError("Min password length should be 6 characters!");
             editTextPassword.requestFocus();
             return;
@@ -99,7 +99,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             User user = new User(fullName, email);
 
                             FirebaseDatabase.getInstance().getReference("Users")
@@ -107,23 +107,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         Toast.makeText(RegisterActivity.this, "User has been register successfully!", Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
 
-                                        Intent mainIntent= new Intent(RegisterActivity.this, MainActivity.class);
-                                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
+                                        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(mainIntent);
                                         finish();
-                                    }
-                                    else {
+                                    } else {
                                         Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
                                         progressBar.setVisibility(View.GONE);
                                     }
                                 }
                             });
-                        }
-                        else {
+                        } else {
                             Toast.makeText(RegisterActivity.this, "Failed to register! Try again!", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }

@@ -16,12 +16,12 @@
 
         <TextView
             android:id="@+id/recipeName"
-            android:maxWidth="315dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="5dp"
             android:gravity="center_vertical"
+            android:maxWidth="315dp"
             android:text="name"
             android:textSize="22sp"
             android:textStyle="bold" />
