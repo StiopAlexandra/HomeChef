@@ -41,17 +41,14 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview_favorites"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center_horizontal"
                 android:nestedScrollingEnabled="false"
                 android:scrollbars="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
@@ -60,6 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:layout_marginTop="10dp"
                 android:text="Don't have favorite recipes..."
                 android:visibility="gone" />
 

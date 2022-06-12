@@ -1,11 +1,8 @@
 package com.example.homechef;
 
-import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,16 +46,16 @@ public class RecipeActivity extends AppCompatActivity {
     private ImageView img;
     private RecyclerView ingredients_rv, instructions_rv;
     private LinearLayout recipe;
-    private DatabaseReference mRootRef;
+    private DatabaseReference mRefFav, mRefShop;
     private FirebaseAuth mAuth;
-    private Toolbar toolbar;
     private ImageButton backButton, favButton, shopButton;
     private ProgressBar progressBar;
-    private JSONArray ingredientsArr, instructionsArr, arr;
+    private TextView emptyView;
     ArrayList<String> ingredients = new ArrayList<String>();
+    ArrayList<Ingredient> shopIngr = new ArrayList<Ingredient>();
     ArrayList<String> instructions = new ArrayList<String>();
-    private boolean like = false, isFavorite = false;
-    public static int TIMEOUT_MS = 5000;
+    private boolean favorite = false, shop = false;
+    public static int TIMEOUT_MS = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,21 +63,15 @@ public class RecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe);
         final Intent intent = getIntent();
         final String recipeId = Objects.requireNonNull(intent.getExtras()).getString("id");
-//        final String recipeName = Objects.requireNonNull(intent.getExtras()).getString("name");
-//        final String recipeImg = Objects.requireNonNull(intent.getExtras()).getString("img");
         mAuth = FirebaseAuth.getInstance();
         final String uid = mAuth.getCurrentUser().getUid();
-        mRootRef = FirebaseDatabase.getInstance().getReference().child(uid).child(recipeId);
+        mRefFav = FirebaseDatabase.getInstance().getReference("FavoriteRecipes").child(uid).child(recipeId);
+        mRefShop = FirebaseDatabase.getInstance().getReference("ShoppingList").child(uid).child(recipeId);
         img = findViewById(R.id.recipe_img);
         name = findViewById(R.id.name);
         recipe = findViewById(R.id.recipe);
         progressBar = findViewById(R.id.progressBar4);
-//        if (recipeImg.isEmpty()) {
-//            img.setImageResource(R.drawable.nopicture);
-//        } else {
-//            Picasso.get().load(recipeImg).into(img);
-//        }
-//        name.setText(recipeName);
+        emptyView = findViewById(R.id.empty_view);
 
         getRecipeData(recipeId);
 
@@ -93,15 +83,33 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
         favButton = findViewById(R.id.fav);
-        mRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        shopButton = findViewById(R.id.shop);
+        mRefFav.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.i("mRootRef", String.valueOf(dataSnapshot));
+                Log.i("mRefFav", String.valueOf(dataSnapshot));
                 if (dataSnapshot.getValue() != null) {
                     favButton.setImageResource(R.drawable.ic_baseline_favorite_border_red_24);
-                    like = true;
+                    favorite = true;
                 }
             }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mRefShop.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.i("mRefShop", String.valueOf(dataSnapshot));
+                if (dataSnapshot.getValue() != null) {
+                    shopButton.setImageResource(R.drawable.ic_baseline_playlist_add_check_red_24);
+                    shop = true;
+                }
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -111,20 +119,20 @@ public class RecipeActivity extends AppCompatActivity {
         favButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                like = !like;
-                mRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                favorite = !favorite;
+                mRefFav.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (like) {
+                        if (favorite) {
                             favButton.setImageResource(R.drawable.ic_baseline_favorite_border_red_24);
                             Map favorites = new HashMap();
                             favorites.put("img", intent.getExtras().getString("img"));
                             favorites.put("name", intent.getExtras().getString("name"));
-                            mRootRef.setValue(favorites);
+                            mRefFav.setValue(favorites);
                         } else {
                             try {
                                 favButton.setImageResource(R.drawable.ic_baseline_favorite_border_24);
-                                mRootRef.setValue(null);
+                                mRefFav.setValue(null);
                             } catch (Exception e) {
                             }
                         }
@@ -136,19 +144,33 @@ public class RecipeActivity extends AppCompatActivity {
             }
         });
 
-//        toolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                switch (v.getId()) {
-//                    case R.id.fav:
-//                        break;
-//                    case R.id.shop:
-//                        break;
-//                }
-//            }
-//        });
+        shopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shop = !shop;
+                mRefShop.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (shop) {
+                            shopButton.setImageResource(R.drawable.ic_baseline_playlist_add_check_red_24);
+                            Map shopList = new HashMap();
+                            shopList.put("name", intent.getExtras().getString("name"));
+                            shopList.put("ingredients", shopIngr);
+                            mRefShop.setValue(shopList);
+                        } else {
+                            try {
+                                shopButton.setImageResource(R.drawable.ic_baseline_playlist_add_check_24);
+                                mRefShop.setValue(null);
+                            } catch (Exception e) {
+                            }
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                    }
+                });
+            }
+        });
 
         ingredients_rv = findViewById(R.id.recipe_ingredients_rv);
         instructions_rv = findViewById(R.id.recipe_instructions_rv);
@@ -169,39 +191,42 @@ public class RecipeActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            //Log.i("recipe:", String.valueOf(response));
-                            //arr = (JSONArray) response.get("results");
-                            //JSONObject jsonObject = arr.getJSONObject(0);
                             if (response.optString("thumbnail_url").isEmpty()) {
                                 img.setImageResource(R.drawable.nopicture);
                             } else {
                                 Picasso.get().load(response.optString("thumbnail_url")).into(img);
                             }
                             name.setText(response.optString("name"));
+                            JSONArray instructionsArr;
                             instructionsArr = response.getJSONArray("instructions");
                             for (int i = 0; i < instructionsArr.length(); i++) {
                                 JSONObject jsonObject1;
                                 jsonObject1 = instructionsArr.getJSONObject(i);
                                 instructions.add(jsonObject1.optString("display_text"));
                             }
+                            Log.i("instructions", String.valueOf(instructions));
                             RecyclerViewAdapterRow adapter1 = new RecyclerViewAdapterRow(getApplicationContext(), instructions);
                             instructions_rv.setAdapter(adapter1);
+                            JSONArray ingredientsArr;
                             ingredientsArr = response.getJSONArray("sections");
-                            JSONObject jsonObject2;
-                            jsonObject2 = ingredientsArr.getJSONObject(0);
-                            JSONArray jsonArray;
-                            jsonArray = jsonObject2.getJSONArray("components");
-                            for (int j = 0; j < jsonArray.length(); j++) {
-                                JSONObject jsonObject3;
-                                jsonObject3 = jsonArray.getJSONObject(j);
-                                ingredients.add(jsonObject3.optString("raw_text"));
+                            for (int i = 0; i < ingredientsArr.length(); i++) {
+                                JSONObject jsonObject2;
+                                jsonObject2 = ingredientsArr.getJSONObject(i);
+                                JSONArray jsonArray;
+                                jsonArray = jsonObject2.getJSONArray("components");
+                                for (int j = 0; j < jsonArray.length(); j++) {
+                                    JSONObject jsonObject3;
+                                    jsonObject3 = jsonArray.getJSONObject(j);
+                                    shopIngr.add(new Ingredient(jsonObject3.optString("raw_text"), false));
+                                    ingredients.add(jsonObject3.optString("raw_text"));
+                                }
                             }
-
+                            Log.i("ingredients", String.valueOf(ingredients));
                             RecyclerViewAdapterRow adapter2 = new RecyclerViewAdapterRow(getApplicationContext(), ingredients);
                             ingredients_rv.setAdapter(adapter2);
                             progressBar.setVisibility(View.GONE);
+                            emptyView.setVisibility(View.GONE);
                             recipe.setVisibility(View.VISIBLE);
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -212,7 +237,8 @@ public class RecipeActivity extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         Log.i("error", error.toString());
                         progressBar.setVisibility(View.GONE);
-                       // recyclerView.setAlpha(0);
+                        recipe.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
                     }
                 }
         ) {
@@ -231,49 +257,4 @@ public class RecipeActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(jsonObjectRequest);
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.recipe_toolbar, menu);
-//        MenuItem favItem = menu.findItem(R.id.fav);
-//        //set different icon when isFavorite is true.
-//        if (isFavorite){
-//            favItem.setIcon(R.drawable.ic_baseline_favorite_border_red_24);
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.fav:
-//                like = !like;
-//                mRootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        if (like) {
-//                            item.setIcon(R.drawable.ic_baseline_favorite_border_red_24);
-//                            Map favorites = new HashMap();
-//                            favorites.put("img", intent.getExtras().getString("img"));
-//                            favorites.put("title", intent.getExtras().getString("title"));
-//                            mRootRef.setValue(favorites);
-//                        } else {
-//                            try {
-//                                item.setIcon(R.drawable.ic_baseline_favorite_border_24);
-//                                mRootRef.setValue(null);
-//                            } catch (Exception e) {
-//                            }
-//                        }
-//                    }
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//                    }
-//                });
-//            case R.id.shop:
-//                //addfav (heart icon) was clicked, Insert your after click code here.
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
 }

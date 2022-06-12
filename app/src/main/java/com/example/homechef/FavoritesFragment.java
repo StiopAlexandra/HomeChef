@@ -35,15 +35,9 @@ import java.util.Objects;
 
 public class FavoritesFragment extends Fragment {
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                             Bundle savedInstanceState) {
-//        return inflater.inflate(R.layout.fragment_favorites, container, false);
-//    }
-
     private ArrayList<Recipe> lstFavorites;
     private RecyclerView myrv;
-    private DatabaseReference mRootRef;
+    private DatabaseReference mRefFav;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
     private TextView emptyView;
@@ -67,8 +61,8 @@ public class FavoritesFragment extends Fragment {
     private void getFavorites(final View rootView) {
         mAuth = FirebaseAuth.getInstance();
         String uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
-        mRootRef = FirebaseDatabase.getInstance().getReference().child(uid);
-        mRootRef.addValueEventListener(new ValueEventListener() {
+        mRefFav = FirebaseDatabase.getInstance().getReference("FavoriteRecipes").child(uid);
+        mRefFav.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 lstFavorites = new ArrayList<>();
@@ -87,9 +81,6 @@ public class FavoritesFragment extends Fragment {
                     emptyView.setVisibility(View.VISIBLE);
                 }
                 else{
-                    //StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
-                    //myrv.setLayoutManager(staggeredGridLayoutManager);
-
                     myrv.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                     RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(getContext(), lstFavorites);
                     myrv.setAdapter(myAdapter);

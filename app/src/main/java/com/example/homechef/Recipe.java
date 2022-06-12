@@ -1,6 +1,6 @@
 package com.example.homechef;
 
-import androidx.annotation.NonNull;
+import java.util.List;
 
 public class Recipe {
     private String id;
@@ -8,6 +8,7 @@ public class Recipe {
     private String thumbnail;
     private String numServings;
     private String totalTime;
+    private List<String> ingredients;
 
     @Override
     public String toString() {
@@ -32,6 +33,12 @@ public class Recipe {
         this.id = id;
         this.name = name;
         this.thumbnail = thumbnail;
+    }
+
+    public Recipe(String id, String name, List<String> ingredients) {
+        this.id = id;
+        this.name = name;
+        this.ingredients = ingredients;
     }
 
     public String getId() {
@@ -74,4 +81,11 @@ public class Recipe {
         this.totalTime = totalTime;
     }
 
+    public List<String> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<String> ingredients) {
+        this.ingredients = ingredients;
+    }
 }

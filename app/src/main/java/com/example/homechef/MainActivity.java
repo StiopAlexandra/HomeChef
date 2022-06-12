@@ -1,8 +1,11 @@
 package com.example.homechef;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -14,6 +17,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity{
 
     private FirebaseAuth mAuth;
+    private SharedPreferences sharedPreferences = null;
     BottomNavigationView bottomNavigationView;
     HomeFragment homeFragment = new HomeFragment();
     ShoppingListFragment shoppingListFragment = new ShoppingListFragment();
@@ -24,6 +28,11 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPreferences =getPreferences(Context.MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("night_mode",true)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -65,7 +74,7 @@ public class MainActivity extends AppCompatActivity{
     private void sendToLogin() {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(loginIntent);
-        finish(); // The user can't come back to this page
+        finish();
     }
 
 }

@@ -3,12 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.127" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_baseline_access_time_24.xml" value="0.109" />
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.1" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.1575" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.1575" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_baseline_favorite_border_red_24.xml" value="0.137" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_baseline_home_24.xml" value="0.121" />
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_baseline_playlist_add_check_24.xml" value="0.127" />
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_baseline_playlist_add_check_red_24.xml" value="0.127" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_baseline_restaurant_24.xml" value="0.109" />
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_baseline_shopping_basket_24.xml" value="0.127" />
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1385" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/search_view_bg.xml" value="0.109" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/toolbar_border.xml" value="0.1465" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/drawable/top_border.xml" value="0.1555" />
@@ -19,14 +25,18 @@
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/activity_register.xml" value="0.15321849501359927" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/activity_register_user.xml" value="0.20416666666666666" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/cardview_item_recipe.xml" value="0.33" />
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/checkbox_view_ingredients.xml" value="0.2" />
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/child_view_shopping.xml" value="0.18" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/fragment_favorites.xml" value="0.21" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/fragment_home.xml" value="0.22" />
-        <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/fragment_settings.xml" value="0.1675929884566054" />
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/fragment_settings.xml" value="0.21" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/fragment_shopping_list.xml" value="0.1675929884566054" />
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/parent_view_shopping.xml" value="0.1455122393472348" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/layout/row_view_item.xml" value="0.1675929884566054" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/menu/menu.xml" value="0.25" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/menu/recipe_toolbar.xml" value="0.1675929884566054" />
         <entry key="..\:/PADMW/HomeChef/app/src/main/res/menu/search.xml" value="0.15476699444206926" />
+        <entry key="..\:/PADMW/HomeChef/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.156" />
       </map>
     </option>
   </component>

@@ -1,5 +1,6 @@
 package com.example.homechef;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -70,12 +71,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public int getItemCount() {
         return mList.size();
-    }
-
-    public void updateData(ArrayList<Recipe> items) {
-        mList.clear();
-        mList.addAll(items);
-        notifyItemRangeInserted(mList.size(), items.size());
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {

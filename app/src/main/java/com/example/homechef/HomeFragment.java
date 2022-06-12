@@ -6,9 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -17,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -49,8 +48,8 @@ public class HomeFragment extends Fragment {
     private ProgressBar progressBar;
     private SearchView searchView;
     private NestedScrollView nestedSV;
-    public static int TIMEOUT_MS = 15000;
-    int page = 0, limit = 2;
+    public static int TIMEOUT_MS = 10000;
+    int page, limit;
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +62,8 @@ public class HomeFragment extends Fragment {
 
         final View RootView = inflater.inflate(R.layout.fragment_home, container, false);
         recipes = new ArrayList<>();
+        page = 0;
+        limit = 0;
         progressBar = RootView.findViewById(R.id.progressBar3);
         emptyView = RootView.findViewById(R.id.empty_view);
         nestedSV = RootView.findViewById(R.id.idNestedSV);
@@ -77,7 +78,9 @@ public class HomeFragment extends Fragment {
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
                     page++;
-                    getRandomRecipes(page, limit);
+                    if(searchView.getQuery().toString().isEmpty()){
+                        getRandomRecipes(page, limit);
+                    }
                 }
             }
         });
@@ -86,10 +89,14 @@ public class HomeFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                emptyView.setVisibility(View.GONE);
                 progressBar.setVisibility(View.VISIBLE);
-                recyclerView.setAlpha(0);
-                searchRecipe(query);
+                recyclerView.setVisibility(View.GONE);
+                if(query.isEmpty()){
+                    getRandomRecipes(0, 0);
+                }
+                else {
+                    searchRecipe(query);
+                }
                 return true;
             }
 
@@ -97,10 +104,8 @@ public class HomeFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
-
         });
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         return RootView;
     }
 
@@ -123,7 +128,6 @@ public class HomeFragment extends Fragment {
                     public void onResponse(JSONObject response) {
                         try {
                             arr = (JSONArray) response.get("results");
-                            //Log.i("the res is:", String.valueOf(arr));
                             for (int i = 0; i < arr.length(); i++) {
                                 JSONObject jsonObject = arr.getJSONObject(i);
                                 JSONObject total_time_tier = new JSONObject();
@@ -134,9 +138,9 @@ public class HomeFragment extends Fragment {
                                 recipes.add(new Recipe(jsonObject.optString("id"), jsonObject.optString("name"), jsonObject.optString("thumbnail_url"), jsonObject.optString("yields"), total_time_tier.optString("display_tier")));
                             }
                             progressBar.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            emptyView.setVisibility(View.GONE);
                             RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(getContext(), recipes);
-                            //RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(getContext(), new ArrayList<>());
-                            //myAdapter.updateData(recipes);
                             recyclerView.setAdapter(myAdapter);
                             recyclerView.setItemAnimator(new DefaultItemAnimator());
 
@@ -150,7 +154,7 @@ public class HomeFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         Log.i("error", error.toString());
                         progressBar.setVisibility(View.GONE);
-                        recyclerView.setAlpha(0);
+                        recyclerView.setVisibility(View.GONE);
                         emptyView.setVisibility(View.VISIBLE);
                     }
                 }
@@ -198,14 +202,18 @@ public class HomeFragment extends Fragment {
                             progressBar.setVisibility(View.GONE);
                             if(searchRecipe.isEmpty()){
                                 recyclerView.setAlpha(0);
+                                progressBar.setVisibility(View.GONE);
                                 emptyView.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
                             }
                             else{
                                 emptyView.setVisibility(View.GONE);
+                                progressBar.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
                                 RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(getContext(), searchRecipe);
                                 recyclerView.setAdapter(myAdapter);
                                 recyclerView.setItemAnimator(new DefaultItemAnimator());
-                                recyclerView.setAlpha(1);
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -217,7 +225,7 @@ public class HomeFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         Log.i("error", error.toString());
                         progressBar.setVisibility(View.GONE);
-                        recyclerView.setAlpha(0);
+                        recyclerView.setVisibility(View.GONE);;
                         emptyView.setVisibility(View.VISIBLE);
                     }
                 }
